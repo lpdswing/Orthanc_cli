@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"ocli/core"
 	"os"
@@ -14,16 +13,19 @@ func main() {
 	app.UseShortOptionHandling = true
 	app.Commands = []*cli.Command{
 		{
-			Name:  "listStudy",
-			Usage: "Show the list of the studies",
+			Name:    "delOverview",
+			Aliases: []string{"do"},
+			Usage:   "Delete biomind overview from orthanc.",
 			Flags: []cli.Flag{
-				&cli.BoolFlag{Name: "serve", Aliases: []string{"s"}},
-				&cli.BoolFlag{Name: "option", Aliases: []string{"o"}},
-				&cli.StringFlag{Name: "message", Aliases: []string{"m"}},
+				&cli.StringFlag{Name: "study_uid", Aliases: []string{"s"}},
 			},
 			Action: func(c *cli.Context) error {
-				fmt.Println(c.String("message"))
-				core.ListStudy()
+				studyUid := c.String("study_uid")
+				if studyUid != "" {
+					core.DeleteOverviewByStudy(studyUid)
+					return nil
+				}
+				core.DeleteAllOverview()
 				return nil
 			},
 		},
